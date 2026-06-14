@@ -1,0 +1,101 @@
+<DAEHAK_LIST>
+    <DAEHAK code="SW" name="소프트웨어융합대학">
+        <HAKBU code="5577" name="인공지능학과" />
+        <HAKBU code="5581" name="데이터사이언스학과" />
+        <HAKBU code="5463" name="컴퓨터공학과" />
+        <HAKBU code="5564" name="스마트미디어학과" />
+    </DAEHAK>
+    <DAEHAK code="51" name="경영대학">
+        <HAKBU code="5281" name="IT금융학과" />
+        <HAKBU code="5290" name="경영학과" />
+        <HAKBU code="5264" name="금융보험학과" />
+        <HAKBU code="5221" name="부동산국토정보학과" />
+        <HAKBU code="5292" name="회계세무학과" />
+        <HAKBU code="5291" name="물류무역학과" />
+    </DAEHAK>
+    <DAEHAK code="36" name="사범대학">
+        <HAKBU code="5400" name="가정교육과" />
+        <HAKBU code="5403" name="과학교육과" />
+        <HAKBU code="5360" name="국어교육과" />
+        <HAKBU code="5401" name="사범대자율전공학부" />
+        <HAKBU code="5390" name="수학교육과" />
+        <HAKBU code="5380" name="영어교육과" />
+        <HAKBU code="5404" name="중등특수교육과" />
+        <HAKBU code="5370" name="한문교육과" />
+    </DAEHAK>
+    <DAEHAK code="A4" name="의과학대학">
+        <HAKBU code="5436" name="간호학과" />
+        <HAKBU code="5432" name="물리치료학과" />
+        <HAKBU code="5433" name="방사선학과" />
+        <HAKBU code="5438" name="보건관리학과" />
+        <HAKBU code="5449" name="식품영양학과" />
+        <HAKBU code="5546" name="운동처방학과" />
+        <HAKBU code="5437" name="작업치료학과" />
+        <HAKBU code="5431" name="재활학과" />
+        <HAKBU code="5448" name="환경생명과학과" />
+    </DAEHAK>
+    <DAEHAK code="41" name="공과대학">
+        <HAKBU code="5490" name="건축공학과" />
+        <HAKBU code="5491" name="건축학과" />
+        <HAKBU code="5480" name="기계공학과" />
+        <HAKBU code="5471" name="기계자동차공학과" />
+        <HAKBU code="5470" name="산업공학과" />
+        <HAKBU code="5444" name="소방안전공학과" />
+        <HAKBU code="5503" name="신소재화학공학과" />
+        <HAKBU code="5462" name="전기전자공학과" />
+        <HAKBU code="5466" name="정보통신공학과" />
+        <HAKBU code="5500" name="토목환경공학과" />
+    </DAEHAK>
+    <DAEHAK code="B1" name="문화융합대학">
+        <HAKBU code="5563" name="게임콘텐츠학과" />
+        <HAKBU code="5549" name="공연예술학과" />
+        <HAKBU code="5566" name="산업디자인학과" />
+        <HAKBU code="5545" name="생활체육학과" />
+        <HAKBU code="5567" name="시각디자인학과" />
+        <HAKBU code="5571" name="영화방송학과" />
+        <HAKBU code="5569" name="예술심리치료학과" />
+        <HAKBU code="5547" name="축구학과" />
+        <HAKBU code="5562" name="태권도학과" />
+    </DAEHAK>
+    <DAEHAK code="25" name="사회과학대학">
+        <HAKBU code="5275" name="경찰학과" />
+        <HAKBU code="5150" name="문헌정보학과" />
+        <HAKBU code="5200" name="법학과" />
+        <HAKBU code="5240" name="사회복지학과" />
+        <HAKBU code="5274" name="상담심리학과" />
+        <HAKBU code="5210" name="행정학과" />
+    </DAEHAK>
+    <DAEHAK code="45" name="문화관광대학">
+        <HAKBU code="5357" name="관광경영학과" />
+        <HAKBU code="5361" name="외식산업조리학과" />
+        <HAKBU code="5358" name="패션산업학과" />
+        <HAKBU code="5356" name="한식조리학과" />
+        <HAKBU code="5359" name="호텔경영학과" />
+    </DAEHAK>
+    <DAEHAK code="SS" name="수퍼스타칼리지">
+        <HAKBU code="5559" name="교양학부" />
+        <HAKBU code="5191" name="융합학부" />
+        <HAKBU code="5989" name="자유전공학부" />
+    </DAEHAK>
+    <DAEHAK code="F1" name="미래융합대학">
+        <HAKBU code="5580" name="농식품경영학과" />
+        <HAKBU code="5995" name="로컬벤처학부" />
+        <HAKBU code="5992" name="미네르바학부" />
+        <HAKBU code="5993" name="반려동식물학과" />
+        <HAKBU code="5573" name="창업경영금융학과" />
+        <HAKBU code="5994" name="친환경자동차학과" />
+    </DAEHAK>
+    <DAEHAK code="F2" name="반려동물산업학부">
+        <HAKBU code="5998" name="동물보건학과" />
+        <HAKBU code="5999" name="펫산업학과" />
+    </DAEHAK>
+    <DAEHAK code="HC" name="인문콘텐츠대학">
+        <HAKBU code="5188" name="신학과경배찬양학과" />
+        <HAKBU code="5113" name="역사콘텐츠학과" />
+        <HAKBU code="5120" name="영어영문학과" />
+        <HAKBU code="5114" name="웹툰만화콘텐츠학과" />
+        <HAKBU code="5186" name="일본언어문화학과" />
+        <HAKBU code="5187" name="중국어중국학과" />
+        <HAKBU code="5112" name="한국어문학과" />
+    </DAEHAK>
+</DAEHAK_LIST>

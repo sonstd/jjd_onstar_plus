@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root xmlns="http://www.nexacroplatform.com/platform/dataset">
+	<Parameters>
+		<Parameter id="_ga"></Parameter>
+		<Parameter id="_ga_X81BV4EGVM"></Parameter>
+		<Parameter id="_gcl_au"></Parameter>
+		<Parameter id="_ga_RRR57RV0RD"></Parameter>
+		<Parameter id="_ga_VHZWH53BQ5"></Parameter>
+		<Parameter id="TS010b82b2"></Parameter>
+		<Parameter id="fsp_action">xDefaultAction</Parameter>
+		<Parameter id="fsp_cmd">execute</Parameter>
+		<Parameter id="GV_USER_ID" />
+		<Parameter id="GV_IP_ADDRESS"></Parameter>
+		<Parameter id="fsp_logId">all</Parameter>
+	</Parameters>
+	<Dataset id="ds_cond">
+		<ColumnInfo>
+			<Column id="PROG_IDX" type="BIGDECIMAL" size="256" />
+			<Column id="PROG_HAKYY" type="STRING" size="256" />
+			<Column id="PROG_HAKGI" type="STRING" size="256" />
+			<Column id="GWAMOK_CODE" type="STRING" size="256" />
+			<Column id="GWAMOK_BUNBAN" type="STRING" size="256" />
+		</ColumnInfo>
+		<Rows>
+			<Row>
+				<Col id="PROG_HAKYY"></Col>
+				<Col id="PROG_HAKGI"></Col>
+				<Col id="GWAMOK_CODE"></Col>
+				<Col id="GWAMOK_BUNBAN"></Col>
+			</Row>
+		</Rows>
+	</Dataset>
+	<Dataset id="fsp_ds_cmd">
+		<ColumnInfo>
+			<Column id="TX_NAME" type="string" size="100" />
+			<Column id="TYPE" type="string" size="10" />
+			<Column id="SQL_ID" type="string" size="200" />
+			<Column id="KEY_SQL_ID" type="string" size="200" />
+			<Column id="KEY_INCREMENT" type="INT" size="10" />
+			<Column id="CALLBACK_SQL_ID" type="STRING" size="200" />
+			<Column id="INSERT_SQL_ID" type="STRING" size="200" />
+			<Column id="UPDATE_SQL_ID" type="STRING" size="200" />
+			<Column id="DELETE_SQL_ID" type="STRING" size="200" />
+			<Column id="SAVE_FLAG_COLUMN" type="STRING" size="200" />
+			<Column id="USE_INPUT" type="STRING" size="1" />
+			<Column id="USE_ORDER" type="STRING" size="1" />
+			<Column id="KEY_ZERO_LEN" type="INT" size="10" />
+			<Column id="BIZ_NAME" type="STRING" size="100" />
+			<Column id="PAGE_NO" type="INT" size="10" />
+			<Column id="PAGE_SIZE" type="INT" size="10" />
+			<Column id="READ_ALL" type="STRING" size="1" />
+			<Column id="EXEC_TYPE" type="STRING" size="2" />
+			<Column id="EXEC" type="STRING" size="1" />
+			<Column id="FAIL" type="STRING" size="1" />
+			<Column id="FAIL_MSG" type="STRING" size="200" />
+			<Column id="EXEC_CNT" type="INT" size="1" />
+			<Column id="MSG" type="STRING" size="200" />
+		</ColumnInfo>
+		<Rows>
+			<Row>
+				<Col id="TX_NAME" />
+				<Col id="TYPE">N</Col>
+				<Col id="SQL_ID">sub03:PROG100P01_R01</Col>
+				<Col id="KEY_SQL_ID" />
+				<Col id="KEY_INCREMENT">0</Col>
+				<Col id="CALLBACK_SQL_ID" />
+				<Col id="INSERT_SQL_ID" />
+				<Col id="UPDATE_SQL_ID" />
+				<Col id="DELETE_SQL_ID" />
+				<Col id="SAVE_FLAG_COLUMN" />
+				<Col id="USE_INPUT" />
+				<Col id="USE_ORDER" />
+				<Col id="KEY_ZERO_LEN">0</Col>
+				<Col id="BIZ_NAME" />
+				<Col id="PAGE_NO" />
+				<Col id="PAGE_SIZE" />
+				<Col id="READ_ALL" />
+				<Col id="EXEC_TYPE">B</Col>
+				<Col id="EXEC" />
+				<Col id="FAIL" />
+				<Col id="FAIL_MSG" />
+				<Col id="EXEC_CNT">0</Col>
+				<Col id="MSG" />
+			</Row>
+			<Row>
+				<Col id="TX_NAME" />
+				<Col id="TYPE">N</Col>
+				<Col id="SQL_ID">sub03:PROG100P01_R02</Col>
+				<Col id="KEY_SQL_ID" />
+				<Col id="KEY_INCREMENT">0</Col>
+				<Col id="CALLBACK_SQL_ID" />
+				<Col id="INSERT_SQL_ID" />
+				<Col id="UPDATE_SQL_ID" />
+				<Col id="DELETE_SQL_ID" />
+				<Col id="SAVE_FLAG_COLUMN" />
+				<Col id="USE_INPUT" />
+				<Col id="USE_ORDER" />
+				<Col id="KEY_ZERO_LEN">0</Col>
+				<Col id="BIZ_NAME" />
+				<Col id="PAGE_NO" />
+				<Col id="PAGE_SIZE" />
+				<Col id="READ_ALL" />
+				<Col id="EXEC_TYPE">B</Col>
+				<Col id="EXEC" />
+				<Col id="FAIL" />
+				<Col id="FAIL_MSG" />
+				<Col id="EXEC_CNT">0</Col>
+				<Col id="MSG" />
+			</Row>
+			<Row>
+				<Col id="TX_NAME" />
+				<Col id="TYPE">N</Col>
+				<Col id="SQL_ID">sub03:PROG100P01_R03</Col>
+				<Col id="KEY_SQL_ID" />
+				<Col id="KEY_INCREMENT">0</Col>
+				<Col id="CALLBACK_SQL_ID" />
+				<Col id="INSERT_SQL_ID" />
+				<Col id="UPDATE_SQL_ID" />
+				<Col id="DELETE_SQL_ID" />
+				<Col id="SAVE_FLAG_COLUMN" />
+				<Col id="USE_INPUT" />
+				<Col id="USE_ORDER" />
+				<Col id="KEY_ZERO_LEN">0</Col>
+				<Col id="BIZ_NAME" />
+				<Col id="PAGE_NO" />
+				<Col id="PAGE_SIZE" />
+				<Col id="READ_ALL" />
+				<Col id="EXEC_TYPE">B</Col>
+				<Col id="EXEC" />
+				<Col id="FAIL" />
+				<Col id="FAIL_MSG" />
+				<Col id="EXEC_CNT">0</Col>
+				<Col id="MSG" />
+			</Row>
+			<Row>
+				<Col id="TX_NAME" />
+				<Col id="TYPE">N</Col>
+				<Col id="SQL_ID">sub03:PROG100P01_R04</Col>
+				<Col id="KEY_SQL_ID" />
+				<Col id="KEY_INCREMENT">0</Col>
+				<Col id="CALLBACK_SQL_ID" />
+				<Col id="INSERT_SQL_ID" />
+				<Col id="UPDATE_SQL_ID" />
+				<Col id="DELETE_SQL_ID" />
+				<Col id="SAVE_FLAG_COLUMN" />
+				<Col id="USE_INPUT" />
+				<Col id="USE_ORDER" />
+				<Col id="KEY_ZERO_LEN">0</Col>
+				<Col id="BIZ_NAME" />
+				<Col id="PAGE_NO" />
+				<Col id="PAGE_SIZE" />
+				<Col id="READ_ALL" />
+				<Col id="EXEC_TYPE">B</Col>
+				<Col id="EXEC" />
+				<Col id="FAIL" />
+				<Col id="FAIL_MSG" />
+				<Col id="EXEC_CNT">0</Col>
+				<Col id="MSG" />
+			</Row>
+			<Row>
+				<Col id="TX_NAME" />
+				<Col id="TYPE">N</Col>
+				<Col id="SQL_ID">sub03:PROG100P01_R05</Col>
+				<Col id="KEY_SQL_ID" />
+				<Col id="KEY_INCREMENT">0</Col>
+				<Col id="CALLBACK_SQL_ID" />
+				<Col id="INSERT_SQL_ID" />
+				<Col id="UPDATE_SQL_ID" />
+				<Col id="DELETE_SQL_ID" />
+				<Col id="SAVE_FLAG_COLUMN" />
+				<Col id="USE_INPUT" />
+				<Col id="USE_ORDER" />
+				<Col id="KEY_ZERO_LEN">0</Col>
+				<Col id="BIZ_NAME" />
+				<Col id="PAGE_NO" />
+				<Col id="PAGE_SIZE" />
+				<Col id="READ_ALL" />
+				<Col id="EXEC_TYPE">B</Col>
+				<Col id="EXEC" />
+				<Col id="FAIL" />
+				<Col id="FAIL_MSG" />
+				<Col id="EXEC_CNT">0</Col>
+				<Col id="MSG" />
+			</Row>
+		</Rows>
+	</Dataset>
+	<Dataset id="gds_user">
+		<ColumnInfo />
+		<Rows>
+		</Rows>
+	</Dataset>
+</Root>
