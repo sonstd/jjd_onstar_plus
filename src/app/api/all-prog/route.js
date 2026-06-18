@@ -170,15 +170,15 @@ async function reqProgDetail(hakyy, hakgi, code, bunban) {
       TARGET_HAKBU: '',
       TARGET_GRADE: []
     };
-    
-    for(let col of progDetail_row.Col) {
-      if(col.$ && col.$.id === 'CODE_DAEHAK') {
+
+    for (let col of progDetail_row.Col) {
+      if (col.$ && col.$.id === 'CODE_DAEHAK') {
         progDetail.TARGET_DAEHAK = String(col._);
       }
-      else if(col.$ && col.$.id === 'CODE_HAKBU') {
+      else if (col.$ && col.$.id === 'CODE_HAKBU') {
         progDetail.TARGET_HAKBU = String(col._);
       }
-      else if(col.$ && col.$.id === 'TARGET_GRADE') {
+      else if (col.$ && col.$.id === 'TARGET_GRADE') {
         progDetail.TARGET_GRADE = String(col._).split(',').slice(1);
       }
     }
@@ -195,23 +195,35 @@ async function reqProgDetail(hakyy, hakgi, code, bunban) {
 }
 
 export async function GET(request) {
-  const allProgs = []
+  const timemsg = (msg) => {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const ms = String(now.getMilliseconds()).padStart(3, '0');
+
+    console.log(`${hours}:${minutes}:${seconds}.${ms}:\n${msg}\n\n`);
+  }
 
   try {
     const max_search_pages_count = 6;
+    timemsg('요청1 시작');
     const requests_progsList = Array.from({ length: max_search_pages_count }, (_, i) =>
       reqProgsList(i + 1)
     );
     const available_progsList = (await Promise.all(requests_progsList)).flat();
+    timemsg('요청1 완료')
 
+    timemsg('요청2 시작')
     const requests_progsDetail = Array.from({ length: available_progsList.length }, (_, i) => {
       const { PROG_HAKYY, PROG_HAKGI, GWAMOK_CODE, GWAMOK_BUNBAN } = available_progsList[i];
       return reqProgDetail(PROG_HAKYY, PROG_HAKGI, GWAMOK_CODE, GWAMOK_BUNBAN);
     });
     const progDetails = (await Promise.all(requests_progsDetail)).flat();
+    timemsg('요청2 완료')
 
     const progs_info = Array.from({ length: available_progsList.length }, (_, i) => {
-      return {...available_progsList[i], ...progDetails[i]}
+      return { ...available_progsList[i], ...progDetails[i] }
     });
 
     return NextResponse.json({
