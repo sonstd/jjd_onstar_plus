@@ -3,6 +3,8 @@ import path from 'path';
 import { NextResponse } from 'next/server';
 import xml2js from 'xml2js';
 
+export const runtime = 'edge';
+
 async function parseXml(xml_raw) {
   const parser = new xml2js.Parser();
 
