@@ -3,195 +3,224 @@ import path from 'path';
 import { NextResponse } from 'next/server';
 import xml2js from 'xml2js';
 
-export async function GET(request) {
+async function parseXml(xml_raw) {
   const parser = new xml2js.Parser();
+
+  const xml_parsed = await parser.parseStringPromise(xml_raw);
+  return xml_parsed;
+}
+
+function buildXml(xml_parsed) {
   const builder = new xml2js.Builder();
 
-  const allProgs = []
+  return builder.buildObject(xml_parsed);
+}
 
+async function getParsedXmlFromPath(xml_path) {
+  const path_parts = xml_path.split('/');
+  const abs_path = path.join(process.cwd(), 'src', 'data', ...path_parts);
+  const xml_raw = await fs.readFile(abs_path, 'utf-8');
+  const xml_parsed = await parseXml(xml_raw);
+
+  return xml_parsed;
+}
+
+async function reqProgsList(page_num) {
   try {
-    const hakbuXmlPath = path.join(process.cwd(), 'src', 'data', 'hakbu_data.xml');
-    const hakbuXmlRaw = await fs.readFile(hakbuXmlPath, 'utf-8');
-    const hakbuXmlParsed = await parser.parseStringPromise(hakbuXmlRaw);
-    
-    const detailReqXmlPath = path.join(process.cwd(), 'src', 'data', 'req_data', 'prog-detail.xml');
-    const detailReqXmlRaw = await fs.readFile(detailReqXmlPath, 'utf-8');
+    const reqData_progsList = await getParsedXmlFromPath('req_data/get-progs-list.xml');
+    const cond_row = reqData_progsList.Root.Dataset
+      .find(ds => ds.$ && ds.$.id === 'ds_cond')
+      .Rows[0].Row[0];
 
-    const reqXmlPath = path.join(process.cwd(), 'src', 'data', 'req_data', 'all-prog.xml');
-    let reqXmlRaw = await fs.readFile(reqXmlPath, 'utf-8');
-
-    const reqXmlParsed = await parser.parseStringPromise(reqXmlRaw);
-    const pageRow = reqXmlParsed.Root.Dataset
-    .find(ds => ds.$ && ds.$.id === 'ds_cond')
-    .Rows[0].Row[0];
-
-    let stop = false;
-
-    for(let i=1; i<20; i++){
-      for (let col of pageRow.Col) {
-        if (col.$ && col.$.id === 'PAGE') {
-          col._ = String(i);
-          break;
-        }
-      }
-
-      reqXmlRaw = builder.buildObject(reqXmlParsed);
-
-      const res = await fetch("https://onstar.jj.ac.kr/XMain", {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/xml",
-          "X-Requested-With": "XMLHttpRequest"
-        },
-        body: reqXmlRaw
-      });
-      const resXmlRaw = await res.text();
-
-      const resXmlParsed = await parser.parseStringPromise(resXmlRaw);
-      const targetRows = resXmlParsed.Root.Dataset
-      .find(ds => ds.$ && ds.$.id === 'ds_list01')
-      .Rows[0];
-
-      for(let row of targetRows.Row) {
-        const gwamokData = {
-          JANGHAK: false,
-          SANG: false,
-          SRP: false
-        };
-
-        for (let col of row.Col) {
-          if (col.$ && col.$.id === 'DDAY') {
-            if(col._ === '마감'){
-              stop = true;
-              break;
-            }
-            else {
-              gwamokData.DDAY = col._;
-            }
-          }
-          else if (col.$ && col.$.id === 'PROG_HAKYY') {
-            gwamokData.PROG_HAKYY = col._;
-          }
-          else if (col.$ && col.$.id === 'PROG_HAKGI') {
-            gwamokData.PROG_HAKGI = col._;
-          }
-          else if (col.$ && col.$.id === 'GWAMOK_CODE') {
-            gwamokData.GWAMOK_CODE = col._;
-          }
-          else if (col.$ && col.$.id === 'GWAMOK_BUNBAN') {
-            gwamokData.GWAMOK_BUNBAN = col._;
-          }
-          else if (col.$ && col.$.id === 'PROG_TITLE') {
-            gwamokData.PROG_TITLE = col._;
-          }
-          else if (col.$ && col.$.id === 'APP_DATE') {
-            gwamokData.APP_DATE = col._;
-          }
-          else if (col.$ && col.$.id === 'PROG_TIME_INFO') {
-            gwamokData.PROG_TIME_INFO = col._;
-          }
-          else if (col.$ && col.$.id === 'MEMBER_CNT') {
-            gwamokData.MEMBER_CNT = col._;
-          }
-
-          if (col.$ && col._ && String(col._).includes('장학금')){
-            gwamokData.JANGHAK = true;
-          }
-          if (col.$ && col._ && String(col._).includes('상금')){
-            gwamokData.SANG = true;
-          }
-          if (col.$ && col._ && String(col._).includes('SRP')){
-            gwamokData.SRP = true;
-          }
-        }
-
-        if(stop) {
-          break;
-        }
-        else {
-          const detailReqXmlParsed = await parser.parseStringPromise(detailReqXmlRaw);
-          const gwamokRow = detailReqXmlParsed.Root.Dataset
-          .find(ds => ds.$ && ds.$.id === 'ds_cond')
-          .Rows[0].Row[0];
-
-          for (let col of gwamokRow.Col) {
-            if (col.$ && col.$.id === 'PROG_HAKYY') {
-              col._ = gwamokData.PROG_HAKYY;
-            }
-            else if (col.$ && col.$.id === 'PROG_HAKGI') {
-              col._ = gwamokData.PROG_HAKGI;
-            }
-            else if (col.$ && col.$.id === 'GWAMOK_CODE') {
-              col._ = gwamokData.GWAMOK_CODE;
-            }
-            else if (col.$ && col.$.id === 'GWAMOK_BUNBAN') {
-              col._ = gwamokData.GWAMOK_BUNBAN;
-            }
-          }
-
-          const configuredDetailXmlRaw = builder.buildObject(detailReqXmlParsed);
-
-          const detail_res = await fetch("https://onstar.jj.ac.kr/XMain", {
-            method: "POST",
-            headers: {
-              "Content-Type": "text/xml",
-              "X-Requested-With": "XMLHttpRequest"
-            },
-            body: configuredDetailXmlRaw
-          });
-
-          const detailResXmlRaw = await detail_res.text();
-          const detailResXmlParsed = await parser.parseStringPromise(detailResXmlRaw);
-
-          const detailRow = detailResXmlParsed.Root.Dataset
-          .find(ds => ds.$ && ds.$.id === 'ds_list02')
-          .Rows[0].Row[0];
-
-          let target_daehak_code = null;
-          let target_hakbu_code = null;
-          let target_grade = ["1", "2", "3", "4", "5"];
-
-          for (let col of detailRow.Col) {
-            if (col.$ && col.$.id === 'CODE_DAEHAK' && col._ && String(col._) !== '00') {
-              target_daehak_code = col._;
-            }
-            else if (col.$ && col.$.id === 'CODE_HAKBU' && col._ && String(col._) !== '0000') {
-              target_hakbu_code = col._;
-            }
-            else if (col.$ && col.$.id === 'TARGET_GRADE' && col._) {
-              target_grade = String(col._).split(',').slice(1);
-            }
-          }
-
-          const target_daehak_name = target_daehak_code ? 
-          hakbuXmlParsed.DAEHAK_LIST.DAEHAK
-          .find(dh => dh.$ && dh.$.code === target_daehak_code).$.name : 'any'
-
-          const target_hakbu_name = (target_daehak_code && target_hakbu_code) ? 
-          hakbuXmlParsed.DAEHAK_LIST.DAEHAK
-          .find(dh => dh.$ && dh.$.code === target_daehak_code).HAKBU
-          .find(hb => hb.$ && hb.$.code === target_hakbu_code).$.name : 'any'
-
-          gwamokData.TARGET_DAEHAK = target_daehak_name;
-          gwamokData.TARGET_HAKBU = target_hakbu_name;
-          gwamokData.TARGET_GRADE = target_grade;
-
-          allProgs.push(gwamokData);
-        }
-      }
-
-      if(stop){
+    for (let col of cond_row.Col) {
+      if (col.$ && col.$.id === 'PAGE') {
+        col._ = String(page_num);
         break;
       }
     }
 
+    const res = await fetch("https://onstar.jj.ac.kr/XMain", {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/xml",
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: buildXml(reqData_progsList)
+    });
+    const res_xml_raw = await res.text();
+
+    const progsList_xml = await parseXml(res_xml_raw);
+    const progsList_rows = progsList_xml.Root.Dataset
+      .find(ds => ds.$ && ds.$.id === 'ds_list01').Rows[0].Row;
+
+    const progsList = (progsList_rows ?? []).reduce((res, row) => {
+      const prog_data = {};
+
+      for (let col of row.Col) {
+        if (col.$ && col.$.id === 'PROG_HAKYY') {
+          prog_data.PROG_HAKYY = col._;
+        }
+        else if (col.$ && col.$.id === 'PROG_HAKGI') {
+          prog_data.PROG_HAKGI = col._;
+        }
+        else if (col.$ && col.$.id === 'GWAMOK_CODE') {
+          prog_data.GWAMOK_CODE = col._;
+        }
+        else if (col.$ && col.$.id === 'GWAMOK_BUNBAN') {
+          prog_data.GWAMOK_BUNBAN = col._;
+        }
+        else if (col.$ && col.$.id === 'PROG_TITLE') {
+          prog_data.PROG_TITLE = col._;
+        }
+        else if (col.$ && col.$.id === 'APP_DATE') {
+          prog_data.APP_DATE = col._;
+        }
+        else if (col.$ && col.$.id === 'PROG_TIME_INFO') {
+          prog_data.PROG_TIME_INFO = col._;
+        }
+        else if (col.$ && col.$.id === 'DDAY') {
+          prog_data.DDAY = col._;
+        }
+        else if (col.$ && col.$.id === 'MEMBER_CNT') {
+          prog_data.MEMBER_CNT = col._;
+        }
+
+        if (col.$ && col._ && String(col._).includes('장학금')) {
+          prog_data.JANGHAK = true;
+        }
+        if (col.$ && col._ && String(col._).includes('상금')) {
+          prog_data.SANG = true;
+        }
+        if (col.$ && col._ && String(col._).includes('SRP')) {
+          prog_data.SRP = true;
+        }
+      }
+
+      if (prog_data.DDAY !== '마감') {
+        res.push(prog_data);
+      }
+
+      return res;
+    }, []);
+
+    return progsList;
+  }
+  catch (error) {
+    console.log('reqProgsList - Error:\n', error);
+    return null;
+  }
+}
+
+async function reqProgDetail(hakyy, hakgi, code, bunban) {
+  try {
+    const reqData_progDetail = await getParsedXmlFromPath('req_data/get-prog-detail.xml');
+    const cond_row = reqData_progDetail.Root.Dataset
+      .find(ds => ds.$ && ds.$.id === 'ds_cond')
+      .Rows[0].Row[0];
+
+    for (let col of cond_row.Col) {
+      if (col.$ && col.$.id === 'PROG_HAKYY') {
+        col._ = hakyy;
+      }
+      else if (col.$ && col.$.id === 'PROG_HAKGI') {
+        col._ = hakgi;
+      }
+      else if (col.$ && col.$.id === 'GWAMOK_CODE') {
+        col._ = code;
+      }
+      else if (col.$ && col.$.id === 'GWAMOK_BUNBAN') {
+        col._ = bunban;
+      }
+    }
+
+    const res = await fetch("https://onstar.jj.ac.kr/XMain", {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/xml",
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: buildXml(reqData_progDetail)
+    });
+    const res_xml_raw = await res.text();
+
+    const progDetail_xml = await parseXml(res_xml_raw);
+    const progDetail_row = progDetail_xml.Root.Dataset
+      .find(ds => ds.$ && ds.$.id === 'ds_list02').Rows[0].Row[0];
+
+    const hakbu_xml = await getParsedXmlFromPath('hakbu_data.xml');
+
+    const getDaehakName = daehak_code => {
+      return daehak_code ?
+        hakbu_xml.DAEHAK_LIST.DAEHAK
+          .find(dh => dh.$ && dh.$.code === daehak_code)
+          .$.name :
+        '';
+    }
+    const getHakbuName = (daehak_code, hakbu_code) => {
+      return (daehak_code && hakbu_code) ?
+        hakbu_xml.DAEHAK_LIST.DAEHAK
+          .find(dh => dh.$ && dh.$.code === daehak_code)
+          .HAKBU.find(hb => hb.$ && hb.$.code === hakbu_code)
+          .$.name :
+        '';
+    }
+
+    const progDetail = {
+      TARGET_DAEHAK: '',
+      TARGET_HAKBU: '',
+      TARGET_GRADE: []
+    };
+    
+    for(let col of progDetail_row.Col) {
+      if(col.$ && col.$.id === 'CODE_DAEHAK') {
+        progDetail.TARGET_DAEHAK = String(col._);
+      }
+      else if(col.$ && col.$.id === 'CODE_HAKBU') {
+        progDetail.TARGET_HAKBU = String(col._);
+      }
+      else if(col.$ && col.$.id === 'TARGET_GRADE') {
+        progDetail.TARGET_GRADE = String(col._).split(',').slice(1);
+      }
+    }
+
+    progDetail.TARGET_HAKBU = getHakbuName(progDetail.TARGET_DAEHAK, progDetail.TARGET_HAKBU);
+    progDetail.TARGET_DAEHAK = getDaehakName(progDetail.TARGET_DAEHAK);
+
+    return progDetail;
+  }
+  catch (error) {
+    console.log('reqProgDetail - Error:\n', error);
+    return null;
+  }
+}
+
+export async function GET(request) {
+  const allProgs = []
+
+  try {
+    const max_search_pages_count = 6;
+    const requests_progsList = Array.from({ length: max_search_pages_count }, (_, i) =>
+      reqProgsList(i + 1)
+    );
+    const available_progsList = (await Promise.all(requests_progsList)).flat();
+
+    const requests_progsDetail = Array.from({ length: available_progsList.length }, (_, i) => {
+      const { PROG_HAKYY, PROG_HAKGI, GWAMOK_CODE, GWAMOK_BUNBAN } = available_progsList[i];
+      return reqProgDetail(PROG_HAKYY, PROG_HAKGI, GWAMOK_CODE, GWAMOK_BUNBAN);
+    });
+    const progDetails = (await Promise.all(requests_progsDetail)).flat();
+
+    const progs_info = Array.from({ length: available_progsList.length }, (_, i) => {
+      return {...available_progsList[i], ...progDetails[i]}
+    });
+
     return NextResponse.json({
       status: "success",
-      data: allProgs,
+      data: progs_info,
       error_msg: ""
     });
   }
-  catch (error){
+  catch (error) {
     console.log(`fetch error:\n${error.message}`)
     return NextResponse.json({
       status: "fail",

@@ -85,9 +85,9 @@ function ProgramCard({ prog, onCardClick }) {
   const member = getMemberStatus(prog.MEMBER_CNT);
 
   const targetText =
-    prog.TARGET_DAEHAK === "any"
+    prog.TARGET_DAEHAK === ""
       ? "전체 단과대"
-      : prog.TARGET_HAKBU === "any"
+      : prog.TARGET_HAKBU === ""
       ? prog.TARGET_DAEHAK
       : `${prog.TARGET_DAEHAK} · ${prog.TARGET_HAKBU}`;
 
@@ -467,11 +467,11 @@ export default function Home() {
   const filtered = useMemo(() => {
     return programs.filter((p) => {
       if (filters.daehak) {
-        if (p.TARGET_DAEHAK !== "any" && p.TARGET_DAEHAK !== filters.daehak)
+        if (p.TARGET_DAEHAK !== "" && p.TARGET_DAEHAK !== filters.daehak)
           return false;
       }
       if (filters.hakbu) {
-        if (p.TARGET_HAKBU !== "any" && p.TARGET_HAKBU !== filters.hakbu)
+        if (p.TARGET_HAKBU !== "" && p.TARGET_HAKBU !== filters.hakbu)
           return false;
       }
       if (filters.grades.length > 0) {
