@@ -202,7 +202,7 @@ export async function GET(request) {
     const seconds = String(now.getSeconds()).padStart(2, '0');
     const ms = String(now.getMilliseconds()).padStart(3, '0');
 
-    console.log(`${hours}:${minutes}:${seconds}.${ms}:\n${msg}\n\n`);
+    console.log(`${hours}:${minutes}:${seconds}.${ms}:\n${msg}\n`);
   }
 
   try {
