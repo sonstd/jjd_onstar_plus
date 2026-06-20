@@ -249,18 +249,10 @@ export async function GET(request) {
       return { ...available_progsList[i], ...progDetails[i] }
     });
 
-    return NextResponse.json({
-      status: "success",
-      data: progs_info,
-      error_msg: ""
-    });
+    return NextResponse.json({ status: "success", data: progs_info, error_msg: "" });
   }
   catch (error) {
     console.log(`fetch error:\n${error.message}`)
-    return NextResponse.json({
-      status: "fail",
-      data: [],
-      error_msg: error.message
-    }, { status: 500 });
+    return NextResponse.json({ status: "fail", data: [], error_msg: error.message }, { status: 500 });
   }
 }
