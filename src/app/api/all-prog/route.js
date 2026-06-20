@@ -3,6 +3,8 @@ import path from 'path';
 import { NextResponse } from 'next/server';
 import xml2js from 'xml2js';
 
+const cached_templates = { isInitialized: false };
+
 async function parseXml(xml_raw) {
   const parser = new xml2js.Parser();
 
@@ -25,9 +27,16 @@ async function getParsedXmlFromPath(xml_path) {
   return xml_parsed;
 }
 
+async function cacheXmlTemplates() {
+  cached_templates.req_progsList = await getParsedXmlFromPath('req_data/get-progs-list.xml');
+  cached_templates.req_progDetail = await getParsedXmlFromPath('req_data/get-prog-detail.xml');
+  cached_templates.hakbu = await getParsedXmlFromPath('hakbu_data.xml');
+  cached_templates.isInitialized = true;
+}
+
 async function reqProgsList(page_num) {
   try {
-    const reqData_progsList = await getParsedXmlFromPath('req_data/get-progs-list.xml');
+    const reqData_progsList = structuredClone(cached_templates.req_progsList);
     const cond_row = reqData_progsList.Root.Dataset
       .find(ds => ds.$ && ds.$.id === 'ds_cond')
       .Rows[0].Row[0];
@@ -113,7 +122,7 @@ async function reqProgsList(page_num) {
 
 async function reqProgDetail(hakyy, hakgi, code, bunban) {
   try {
-    const reqData_progDetail = await getParsedXmlFromPath('req_data/get-prog-detail.xml');
+    const reqData_progDetail = structuredClone(cached_templates.req_progDetail);
     const cond_row = reqData_progDetail.Root.Dataset
       .find(ds => ds.$ && ds.$.id === 'ds_cond')
       .Rows[0].Row[0];
@@ -147,7 +156,7 @@ async function reqProgDetail(hakyy, hakgi, code, bunban) {
     const progDetail_row = progDetail_xml.Root.Dataset
       .find(ds => ds.$ && ds.$.id === 'ds_list02').Rows[0].Row[0];
 
-    const hakbu_xml = await getParsedXmlFromPath('hakbu_data.xml');
+    const hakbu_xml = cached_templates.hakbu;
 
     const getDaehakName = daehak_code => {
       return daehak_code ?
@@ -205,22 +214,36 @@ export async function GET(request) {
     console.log(`${hours}:${minutes}:${seconds}.${ms}:\n${msg}\n`);
   }
 
+  if (!cached_templates.isInitialized) {
+    await cacheXmlTemplates();
+  }
+
   try {
     const max_search_pages_count = 6;
-    timemsg('요청1 시작');
+    
+    timemsg('프로그램 목록 요청 시작');
     const requests_progsList = Array.from({ length: max_search_pages_count }, (_, i) =>
       reqProgsList(i + 1)
     );
-    const available_progsList = (await Promise.all(requests_progsList)).flat();
-    timemsg('요청1 완료')
+    const available_progsList = (await Promise.all(requests_progsList)).flat().filter(Boolean);
+    if (available_progsList.length === 0) {
+      timemsg('프로그램 목록 요청 실패');
 
-    timemsg('요청2 시작')
+      return NextResponse.json({
+        status: "fail",
+        data: [],
+        error_msg: 'fail to get programs list'
+      }, { status: 500 });
+    }
+    timemsg('프로그램 목록 요청 성공');
+
+    timemsg('프로그램 상세정보 요청 시작');
     const requests_progsDetail = Array.from({ length: available_progsList.length }, (_, i) => {
       const { PROG_HAKYY, PROG_HAKGI, GWAMOK_CODE, GWAMOK_BUNBAN } = available_progsList[i];
       return reqProgDetail(PROG_HAKYY, PROG_HAKGI, GWAMOK_CODE, GWAMOK_BUNBAN);
     });
-    const progDetails = (await Promise.all(requests_progsDetail)).flat();
-    timemsg('요청2 완료')
+    const progDetails = await Promise.all(requests_progsDetail);
+    timemsg('프로그램 상세정보 요청 완료');
 
     const progs_info = Array.from({ length: available_progsList.length }, (_, i) => {
       return { ...available_progsList[i], ...progDetails[i] }
