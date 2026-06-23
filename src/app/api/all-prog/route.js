@@ -34,6 +34,11 @@ async function cacheXmlTemplates() {
   cached_templates.isInitialized = true;
 }
 
+async function saveResult(result) {
+  const save_path = path.join(process.cwd(), 'src', 'data', 'saved_result.json');
+  await fs.writeFile(save_path, result);
+}
+
 async function reqProgsList(page_num) {
   try {
     const reqData_progsList = structuredClone(cached_templates.req_progsList);
@@ -177,7 +182,7 @@ async function reqProgDetail(hakyy, hakgi, code, bunban) {
     const progDetail = {
       TARGET_DAEHAK: '',
       TARGET_HAKBU: '',
-      TARGET_GRADE: []
+      TARGET_GRADE: ["1", "2", "3", "4", "5"]
     };
 
     for (let col of progDetail_row.Col) {
@@ -249,6 +254,7 @@ export async function GET(request) {
       return { ...available_progsList[i], ...progDetails[i] }
     });
 
+    saveResult(JSON.stringify(progs_info));
     return NextResponse.json({ status: "success", data: progs_info, error_msg: "" });
   }
   catch (error) {
