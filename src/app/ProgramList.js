@@ -422,14 +422,12 @@ export default function ProgramList({ initialPrograms, hakbuXml }) {
     async function refresh() {
       try {
         const res = await fetch("/api/all-prog");
-        if (!res.ok) return; // 실패 시 saved_result.json 데이터 그대로 유지
+        if (!res.ok) return;
         const json = await res.json();
         if (json.data && json.data.length > 0) {
           setPrograms(json.data);
         }
-      } catch {
-        // 네트워크 오류 시에도 기존 데이터 유지 (조용히 무시)
-      }
+      } catch {}
     }
     refresh();
   }, []);

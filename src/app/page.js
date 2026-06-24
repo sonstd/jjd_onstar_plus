@@ -3,14 +3,16 @@ import path from "path";
 import ProgramList from "./ProgramList";
 
 // ── 로컬 저장된 비교과 프로그램 데이터 읽기 ──────────────
-function getSavedPrograms() {
+async function getSavedPrograms() {
   try {
-    const filePath = path.join(process.cwd(), "src", "data", "saved_result.json");
-    const fileText = fs.readFileSync(filePath, "utf-8");
-    const json = JSON.parse(fileText);
-    return json || [];
+    const res = await fetch('https://jbhuaqih2dcwhv3v.public.blob.vercel-storage.com/saved_result.json');
+    if(!res.ok) {
+      console.log("캐싱 읽어오기 실패");
+      return [];
+    }
+    return await res.json();
   } catch (e) {
-    console.error("saved_result.json 읽기 실패:", e.message);
+    console.error("캐싱 읽어오기 실패", e.message);
     return [];
   }
 }
@@ -26,8 +28,8 @@ function getHakbuXml() {
   }
 }
 
-export default function Home() {
-  const initialPrograms = getSavedPrograms();
+export default async function Home() {
+  const initialPrograms = await getSavedPrograms();
   const hakbuXml = getHakbuXml();
 
   return (

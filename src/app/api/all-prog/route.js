@@ -2,6 +2,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
 import xml2js from 'xml2js';
+import { put } from '@vercel/blob';
 
 const cached_templates = { isInitialized: false };
 
@@ -35,8 +36,13 @@ async function cacheXmlTemplates() {
 }
 
 async function saveResult(result) {
-  const save_path = path.join(process.cwd(), 'src', 'data', 'saved_result.json');
-  await fs.writeFile(save_path, result);
+  const jsonString = JSON.stringify(result, null, 2);
+
+  const blob = await put('saved_result.json', jsonString, {
+    access: 'public',
+    contentType: 'application/json',
+    addRandomSuffix: false,
+  });
 }
 
 async function reqProgsList(page_num) {
@@ -225,7 +231,7 @@ export async function GET(request) {
 
   try {
     const max_search_pages_count = 6;
-    
+
     timemsg('프로그램 목록 요청 시작');
     const requests_progsList = Array.from({ length: max_search_pages_count }, (_, i) =>
       reqProgsList(i + 1)
