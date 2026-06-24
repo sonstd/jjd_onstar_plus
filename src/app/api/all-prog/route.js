@@ -36,12 +36,11 @@ async function cacheXmlTemplates() {
 }
 
 async function saveResult(result) {
-  const jsonString = JSON.stringify(result, null, 2);
-
-  const blob = await put('saved_result.json', jsonString, {
+  await put('saved_result.json', JSON.stringify(result, null, 2), {
     access: 'public',
     contentType: 'application/json',
     addRandomSuffix: false,
+    allowOverwrite: true
   });
 }
 
@@ -260,7 +259,7 @@ export async function GET(request) {
       return { ...available_progsList[i], ...progDetails[i] }
     });
 
-    saveResult(JSON.stringify(progs_info));
+    saveResult(progs_info);
     return NextResponse.json({ status: "success", data: progs_info, error_msg: "" });
   }
   catch (error) {
