@@ -5,7 +5,10 @@ import ProgramList from "./ProgramList";
 // 저장된 비교과 프로그램 데이터 읽기
 async function getSavedPrograms() {
   try {
-    const res = await fetch('https://jbhuaqih2dcwhv3v.public.blob.vercel-storage.com/saved_result.json');
+    const res = await fetch(
+      'https://jbhuaqih2dcwhv3v.public.blob.vercel-storage.com/saved_result.json', 
+      { cache: 'no-store' }
+    );
     if(!res.ok) {
       console.log("saved_result 불러오기: 요청-성공, 응답-실패");
       return [];
