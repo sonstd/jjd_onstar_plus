@@ -30,6 +30,7 @@ function getHakbuXml() {
 }
 
 export default async function Home() {
+  console.log("페이지 접속");
   const initialPrograms = await getSavedPrograms();
   const hakbuXml = getHakbuXml();
 
